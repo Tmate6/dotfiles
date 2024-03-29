@@ -1,0 +1,4 @@
+GREEN=0xffb2d78a
+YELLOW=0xffe6c472
+ORANGE=0xffe39250
+RED=0xeeed5252

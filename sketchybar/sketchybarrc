@@ -1,0 +1,260 @@
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+#
+# Colors
+#
+
+bar_background_color=0xFF000000
+
+bracket_background_color=0x88102010
+
+item_background_color=0x11000000
+item_border_color=0x22FFFFFF
+item_border_width=2
+
+background_color=0x33E0F0E0
+border_color=0x000000
+
+inside_text_color=0xCCFFFFFF
+outisde_text_color=0xCCFFFFFF
+
+border_width=1
+
+#
+# Defaults
+#
+
+bar=(
+  position=top
+  y_offset=-10
+  height=47
+  color=${bar_background_color}
+  corner_radius=15
+  margin=10
+  notch_width=300
+)   
+
+sketchybar --animate exp 10 --bar                                          \
+  "${bar[@]}"
+
+sketchybar --hotload on
+
+default=(
+  y_offset=-4
+  icon.font="Hack Nerd Font:Bold:18.0"
+  label.font="Hack Nerd Font Mono:Bold:15.0"
+  icon.color=${inside_text_color}
+  label.color=${inside_text_color}
+  updates=when_shown
+  blur_radius=40
+  background.corner_radius=9
+  background.height=28
+  background.border_color=${border_color}
+  background.border_width=${border_width}
+)
+
+sketchybar --default                                                        \
+  "${default[@]}"                                                           \
+
+#   
+# Left bar
+#   
+
+app_name=(
+  icon.drawing=off
+  script="$PLUGIN_DIR/front_app.sh"
+
+  padding_left=-15
+  padding_right=15
+
+  label.padding_left=9
+  label.padding_right=10
+
+  background.color=${item_background_color}
+
+  blur_radius=50
+
+  background.clip=1.0
+  background.border_width=${item_border_width}
+  background.border_color=${item_border_color}
+)
+
+sketchybar                                                                 \
+  --add item app_name left                                                 \
+  --set app_name "${app_name[@]}"                                          \
+  --subscribe app_name front_app_switched                                  \
+
+
+SPACE_ICONS=("" "􀀀" "􀀀" "􀀀" "􀀀" "􀀀" "􀀀" "􀀀" "􀀀" "􀀀")
+for i in "${!SPACE_ICONS[@]}"
+do
+  sid="$(($i+1))"
+  space=(
+    space="$sid"
+    icon="􀀀"
+    icon.padding_left=4
+    icon.padding_right=4
+
+    label.drawing=off
+    script="$PLUGIN_DIR/space.sh"
+  )
+  sketchybar --add space space."$sid" left --set space."$sid" "${space[@]}"
+done
+
+#
+# Right bar
+#
+
+clock_item=(
+  script="$PLUGIN_DIR/clock.sh"
+  update_freq=10
+
+  label.padding_left=0
+  label.padding_right=0
+)
+
+sketchybar                                                                 \
+  --add item clock_item right                                              \
+  --set clock_item "${clock_item[@]}"                                      \
+
+date_item=(
+  script="$PLUGIN_DIR/date.sh"
+  update_freq=6000
+
+  padding_right=10
+  padding_left=10
+
+  label.font="Hack Nerd Font Mono:Regular:15.0"
+
+  label.padding_left=10
+  label.padding_right=0
+)
+
+sketchybar                                                                 \
+  --add item date_item right                                               \
+  --set date_item "${date_item[@]}"                                        \
+
+battery_item=(
+  script="$PLUGIN_DIR/battery.sh"
+  update_freq=120
+
+  padding_right=1
+
+  label.padding_left=10
+  label.padding_right=10
+
+  icon.padding_left=8
+
+  blur_radius=2
+
+  background.color=${item_border_color}
+  background.corner_radius=7
+  background.height=25
+)
+
+sketchybar                                                                 \
+  --add item battery_item right                                            \
+  --set battery_item "${battery_item[@]}"                                  \
+  --subscribe battery_item system_woke power_source_change mouse.clicked   \
+
+cpu_item=(
+  script="$PLUGIN_DIR/cpu.sh"
+  update_freq=5
+
+  label.padding_left=7
+  label.padding_right=5
+
+  icon.padding_left=9
+  icon.y_offset=1
+
+  padding_right=0
+)
+
+sketchybar                                                                 \
+  --add item cpu_item right                                                \
+  --set cpu_item icon=􀧓                                                    \
+  --set cpu_item "${cpu_item[@]}"                                          \
+  --subscribe cpu_item system_woke                                         \
+
+ssd_item=(
+  script="$PLUGIN_DIR/diskmonitor.sh"
+  update_freq=6000
+
+  label.padding_left=5
+  icon.padding_left=8
+
+  icon.y_offset=1
+)
+
+sketchybar                                                                 \
+  --add item ssd_item right                                                \
+  --set ssd_item "${ssd_item[@]}"                                          \
+
+sketchybar                                                                 \
+  --add item spacer_item.1 right                                           \
+  --set spacer_item.1 padding_right=3                                      \
+
+
+wifi_item=(
+  script="$PLUGIN_DIR/wifi.sh"
+  update_freq=60
+
+  padding_right=10
+  padding_left=5
+
+  label.padding_right=1
+  label.padding_left=2
+
+  icon=􀙇
+  icon.y_offset=1
+  icon.padding_right=5
+  icon.padding_left=2
+)
+
+sketchybar                                                                 \
+  --add item wifi_item right                                               \
+  --set wifi_item "${wifi_item[@]}"                                        \
+  --subscribe wifi_item wifi_change
+
+ip_item=(
+  script="$PLUGIN_DIR/ip.sh"
+
+  update_freq=6000
+
+  icon.padding_left=8
+)
+
+sketchybar                                                                 \
+  --add item ip_item right                                                 \
+  --set ip_item "${ip_item[@]}"                                            \
+  --subscribe ip_item mouse.clicked wifi_change system_woke                \
+
+bracket=(
+  background.padding_left=30
+  background.padding_right=30
+
+  blur_radius=20
+  background.color=${item_background_color}
+  background.corner_radius=9
+  background.height=28
+
+  background.border_width=${item_border_width}
+  background.border_color=${item_border_color}
+
+  background.clip=1.0
+)
+
+sketchybar --animate linear 20                                             \
+          --add bracket status_bracket battery_item cpu_item ssd_item      \
+           --set         status_bracket "${bracket[@]}"                    \
+
+sketchybar --animate linear 20                                             \
+          --add bracket wifi_bracket wifi_item ip_item                     \
+           --set         wifi_bracket "${bracket[@]}"                      \
+
+#
+# Update
+#
+
+sketchybar --update
