@@ -16,7 +16,7 @@ else
 fi
 
 if [ -z "$FINAL_SIG_STRENGTH" ]; then
-    sketchybar --animate exp 10 --set "$NAME" label="Disconnected" icon.color="$RED" label.color="$RED"
+    sketchybar --animate exp 10 --set "$NAME" label="Disconnected" icon.color="$RED"
 else
-    sketchybar --set "$NAME" label="$FINAL_SIG_STRENGTH" icon.color="$COLOR" label.color=0xFFFFFFFF
+    sketchybar --set "$NAME" label="$FINAL_SIG_STRENGTH" icon.color="$COLOR"
 fi
